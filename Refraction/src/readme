@@ -9,4 +9,4 @@ This directory is for demonstrating the Refraction in OpenGL
 3. The res Folder
   3.1 The res folder contains the Stanford Dragon OBJ File
   3.2 The folder also contains the CubeMap Panels
-  
+4. The code is contained in the src folder and the objects as well as the cube map are in the res folder

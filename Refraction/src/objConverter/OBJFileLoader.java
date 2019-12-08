@@ -15,9 +15,11 @@ import renderEngine.Loader;
 
 public class OBJFileLoader {
 
-	private static final String RES_LOC = "res/";
+	private static final String RES_LOC = "res/"; //All of our resources are in the res folder
 
-	public static RawModel loadOBJ(String objFileName, Loader loader) {
+	public static RawModel loadOBJ(String objFileName, Loader loader)
+	{
+		//Parser for OBJ Loader
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");
 		try {
@@ -33,21 +35,28 @@ public class OBJFileLoader {
 		List<Vector3f> normals = new ArrayList<Vector3f>();
 		List<Integer> indices = new ArrayList<Integer>();
 		try {
-			while (true) {
+			while (true) 
+			{
 				line = reader.readLine();
-				if (line.startsWith("v ")) {
+				if (line.startsWith("v ")) 
+				{
+					//Vertices
 					String[] currentLine = line.split(" ");
 					Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
 					Vertex newVertex = new Vertex(vertices.size(), vertex);
 					vertices.add(newVertex);
 
-				} else if (line.startsWith("vt ")) {
+				} else if (line.startsWith("vt "))
+				{
+					//Tangents
 					String[] currentLine = line.split(" ");
 					Vector2f texture = new Vector2f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]));
 					textures.add(texture);
-				} else if (line.startsWith("vn ")) {
+				} else if (line.startsWith("vn "))
+				{
+					//Normals 
 					String[] currentLine = line.split(" ");
 					Vector3f normal = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
@@ -56,7 +65,9 @@ public class OBJFileLoader {
 					break;
 				}
 			}
-			while (line != null && line.startsWith("f ")) {
+			while (line != null && line.startsWith("f ")) 
+			{
+				//Faces
 				String[] currentLine = line.split(" ");
 				String[] vertex1 = currentLine[1].split("/");
 				String[] vertex2 = currentLine[2].split("/");
@@ -80,7 +91,8 @@ public class OBJFileLoader {
 		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 
-	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) {
+	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) 
+	{
 		int index = Integer.parseInt(vertex[0]) - 1;
 		Vertex currentVertex = vertices.get(index);
 		int textureIndex = Integer.parseInt(vertex[1]) - 1;
@@ -90,7 +102,7 @@ public class OBJFileLoader {
 			currentVertex.setNormalIndex(normalIndex);
 			indices.add(index);
 		} else {
-			dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
+			ProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
 		}
 	}
 
@@ -102,13 +114,15 @@ public class OBJFileLoader {
 		return indicesArray;
 	}
 
-	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals,
-			float[] verticesArray, float[] texturesArray, float[] normalsArray) {
-		float furthestPoint = 0;
-		for (int i = 0; i < vertices.size(); i++) {
+	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals,float[] verticesArray, float[] texturesArray, float[] normalsArray)
+	{
+		float farthestPoint = 0;
+		for (int i = 0; i < vertices.size(); i++) 
+		{
 			Vertex currentVertex = vertices.get(i);
-			if (currentVertex.getLength() > furthestPoint) {
-				furthestPoint = currentVertex.getLength();
+			if (currentVertex.getLength() > farthestPoint) 
+			{
+				farthestPoint = currentVertex.getLength();
 			}
 			Vector3f position = currentVertex.getPosition();
 			Vector2f textureCoord = textures.get(currentVertex.getTextureIndex());
@@ -122,18 +136,23 @@ public class OBJFileLoader {
 			normalsArray[i * 3 + 1] = normalVector.y;
 			normalsArray[i * 3 + 2] = normalVector.z;
 		}
-		return furthestPoint;
+		return farthestPoint;
 	}
 
-	private static void dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex,
-			List<Integer> indices, List<Vertex> vertices) {
-		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
+	private static void ProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex,List<Integer> indices, List<Vertex> vertices) 
+	{
+		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex))
+		{
 			indices.add(previousVertex.getIndex());
-		} else {
+		} 
+		else 
+		{
 			Vertex anotherVertex = previousVertex.getDuplicateVertex();
-			if (anotherVertex != null) {
+			if (anotherVertex != null) 
+			{
 				dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex, indices, vertices);
-			} else {
+			} else 
+			{
 				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.getPosition());
 				duplicateVertex.setTextureIndex(newTextureIndex);
 				duplicateVertex.setNormalIndex(newNormalIndex);

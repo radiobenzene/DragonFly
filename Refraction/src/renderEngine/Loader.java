@@ -28,8 +28,10 @@ public class Loader {
 	private List<Integer> vbos = new ArrayList<Integer>();
 	private List<Integer> textures = new ArrayList<Integer>();
 
-	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
-		int vaoID = createVAO();
+	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) 
+	{
+		//Loading to the VAO
+		int vaoID = createVAO(); //Creating VAO
 		bindIndicesBuffer(indices);
 		storeDataInAttributeList(0, 3, positions);
 		storeDataInAttributeList(1, 2, textureCoords);
@@ -38,16 +40,19 @@ public class Loader {
 		return new RawModel(vaoID, indices.length);
 	}
 
-	public RawModel loadToVAO(float[] positions) {
+	public RawModel loadToVAO(float[] positions) 
+	{
 		int vaoID = createVAO();
 		this.storeDataInAttributeList(0, 3, positions);
 		unbindVAO();
 		return new RawModel(vaoID, positions.length / 3);
 	}
 
-	public int loadTexture(String fileName) {
+	public int loadTexture(String fileName) 
+	{
 		Texture texture = null;
 		try {
+			//Simple Parser to load texture
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
@@ -63,7 +68,9 @@ public class Loader {
 		return texture.getTextureID();
 	}
 
-	public void cleanUp() {
+	public void cleanUp() 
+	{
+		//Clean all vaos, vbos and texture lists
 		for (int vao : vaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}
@@ -75,14 +82,18 @@ public class Loader {
 		}
 	}
 
-	private int createVAO() {
+	private int createVAO() 
+	{
+		//Creating VAO here
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
 	}
 
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
+	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) 
+	{
+		//Storing in Attribute List
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
@@ -92,11 +103,14 @@ public class Loader {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 
-	private void unbindVAO() {
+	private void unbindVAO() 
+	{
+		//To Unbind VAO here
 		GL30.glBindVertexArray(0);
 	}
 
-	private void bindIndicesBuffer(int[] indices) {
+	private void bindIndicesBuffer(int[] indices) 
+	{
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboID);
@@ -104,29 +118,33 @@ public class Loader {
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
 
-	private IntBuffer storeDataInIntBuffer(int[] data) {
+	private IntBuffer storeDataInIntBuffer(int[] data) 
+	{
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
 
-	private FloatBuffer storeDataInFloatBuffer(float[] data) {
+	private FloatBuffer storeDataInFloatBuffer(float[] data) 
+	{
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
 
-	public int loadCubeMap(String[] textureFiles) {
+	public int loadCubeMap(String[] textureFiles)
+	{
+		//Simple Parser to Load Cube Map Textures from res folder
 		int texID = GL11.glGenTextures();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
 
-		for (int i = 0; i < textureFiles.length; i++) {
+		for (int i = 0; i < textureFiles.length; i++) 
+		{
 			TextureData data = decodeTextureFile("res/" + textureFiles[i] + ".png");
-			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(),
-					data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(),data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		}
 		GL30.glGenerateMipmap(GL13.GL_TEXTURE_CUBE_MAP);
 		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
@@ -137,7 +155,9 @@ public class Loader {
 		return texID;
 	}
 
-	private TextureData decodeTextureFile(String fileName) {
+	private TextureData decodeTextureFile(String fileName) 
+	{
+		//Using Decoder 
 		int width = 0;
 		int height = 0;
 		ByteBuffer buffer = null;

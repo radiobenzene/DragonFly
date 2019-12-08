@@ -91,6 +91,7 @@ public class OBJFileLoader {
 		return loader.loadToVAO(verticesArray, texturesArray, normalsArray, indicesArray);
 	}
 
+	//Process a Current Vertex
 	private static void processVertex(String[] vertex, List<Vertex> vertices, List<Integer> indices) 
 	{
 		int index = Integer.parseInt(vertex[0]) - 1;

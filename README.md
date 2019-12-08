@@ -5,7 +5,7 @@ Author - Uditangshu Aurangabadkar | Удитангшу Аурангабадка�
 Group 341/1 | Группа 341/1 ФИИТ
 CMC MSU | ВМК МГУ
 
-The Project was written in OpenGL using the LWJGL on Java.
+The Project was written in OpenGL using the LWJGL for Java.
 
 Список Эффектов
 

@@ -22,7 +22,8 @@ import textures.ModelTexture;
 
 public class MainGameLoop {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) 
+	{
 
 		DisplayManager.createDisplay();
 		Camera camera = new Camera();
@@ -42,16 +43,17 @@ public class MainGameLoop {
 			DisplayManager.updateDisplay();
 		}
 
-		renderer.cleanUp();
+		renderer.cleanUp(); //Cleaning the Renderer
 		loader.cleanUp();
-		DisplayManager.closeDisplay();
+		DisplayManager.closeDisplay(); //Closing Display
+		
 
 	}
 	
 	private static TexturedModel loadModel(String fileName, Loader loader)
 	{
 		//Simple Loader Function 
-		RawModel model = OBJFileLoader.loadOBJ(fileName, loader);
+		RawModel model = OBJFileLoader.loadOBJ(fileName, loader); //Loads Object
 		ModelTexture texture = new ModelTexture(loader.loadTexture(fileName));
 		return new TexturedModel(model, texture);
 	}

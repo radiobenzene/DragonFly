@@ -19,7 +19,8 @@ public abstract class ShaderProgram {
 	
 	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	
-	public ShaderProgram(String vertexFile,String fragmentFile){
+	public ShaderProgram(String vertexFile,String fragmentFile)
+	{
 		vertexShaderID = loadShader(vertexFile,GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = loadShader(fragmentFile,GL20.GL_FRAGMENT_SHADER);
 		programID = GL20.glCreateProgram();
@@ -33,11 +34,13 @@ public abstract class ShaderProgram {
 	
 	protected abstract void getAllUniformLocations();
 	
-	protected int getUniformLocation(String uniformName){
+	protected int getUniformLocation(String uniformName)
+	{
 		return GL20.glGetUniformLocation(programID,uniformName);
 	}
 	
-	public void start(){
+	public void start()
+	{
 		GL20.glUseProgram(programID);
 	}
 	
@@ -45,7 +48,8 @@ public abstract class ShaderProgram {
 		GL20.glUseProgram(0);
 	}
 	
-	public void cleanUp(){
+	public void cleanUp()
+	{
 		stop();
 		GL20.glDetachShader(programID, vertexShaderID);
 		GL20.glDetachShader(programID, fragmentShaderID);
@@ -60,11 +64,15 @@ public abstract class ShaderProgram {
 		GL20.glBindAttribLocation(programID, attribute, variableName);
 	}
 	
-	protected void loadFloat(int location, float value){
+	protected void loadFloat(int location, float value)
+	{
+		//Function to load Float
 		GL20.glUniform1f(location, value);
 	}
 	
-	protected void loadInt(int location, int value){
+	protected void loadInt(int location, int value)
+	{
+		//Function to Load int
 		GL20.glUniform1i(location, value);
 	}
 	
@@ -74,7 +82,8 @@ public abstract class ShaderProgram {
 	
 	protected void loadBoolean(int location, boolean value){
 		float toLoad = 0;
-		if(value){
+		if(value)
+		{
 			toLoad = 1;
 		}
 		GL20.glUniform1f(location, toLoad);
@@ -86,9 +95,12 @@ public abstract class ShaderProgram {
 		GL20.glUniformMatrix4(location, false, matrixBuffer);
 	}
 	
-	private static int loadShader(String file, int type){
+	private static int loadShader(String file, int type)
+	{
+		//Loading Shader
 		StringBuilder shaderSource = new StringBuilder();
 		try{
+			//File Reader 
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line;
 			while((line = reader.readLine())!=null){
@@ -99,7 +111,7 @@ public abstract class ShaderProgram {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		int shaderID = GL20.glCreateShader(type);
+		int shaderID = GL20.glCreateShader(type); //Creating Shader
 		GL20.glShaderSource(shaderID, shaderSource);
 		GL20.glCompileShader(shaderID);
 		if(GL20.glGetShaderi(shaderID, GL20.GL_COMPILE_STATUS )== GL11.GL_FALSE){

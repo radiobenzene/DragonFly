@@ -1,0 +1,58 @@
+#version 400 core
+
+//layout(location = 0) 
+in vec3 position;
+
+//layout(location = 1) 
+in vec2 textureCoords;
+in vec3 normal;
+
+
+out vec2 pass_textureCoords;
+out vec3 SurfaceNormal;
+out vec3 ToLightVector[1];
+out vec3 ToCameraVector;//For Specular Lighting(Vertex to Camera) RayTracing
+
+out float visibility; //For the fog
+
+
+uniform mat4 TransformationMatrix;
+uniform mat4 ProjectionMatrix;
+uniform mat4 ViewMatrix;
+uniform vec3 LightPosition[1];//For the Per-Pixel Lighting
+uniform float Use_Fake_lighting;
+
+const float density = 0.004;//For the fog
+const float grad = 2.5; //For the fog's gradient
+
+void main(void)
+{
+	vec4 DisplayPosition = TransformationMatrix * vec4(position,1.0); //Game Position
+	
+	vec4 RelativePosition = ViewMatrix * DisplayPosition; //For the fog
+	 
+	
+	gl_Position = ProjectionMatrix * ViewMatrix * DisplayPosition;
+	pass_textureCoords = textureCoords;
+	
+	for(int i = 0; i <1 ; i++)
+	{
+		ToLightVector[i] = LightPosition[i] - DisplayPosition.xyz; //For each light vector
+	}
+	
+	vec3 ActualNormal = normal;
+	if(Use_Fake_lighting > 0.5)
+	{
+	//Use Fake Lighting here
+		ActualNormal = vec3(0.0, 1.0, 1.0);
+	}
+	SurfaceNormal = (TransformationMatrix * vec4(normal,0.0)).xyz;
+	
+	ToCameraVector = (inverse(ViewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - DisplayPosition.xyz;//For Specular Lighting
+	
+	float dist = length(RelativePosition.xyz);//Distance of the vertex from camera
+	visibility = exp(-pow((dist * density),grad));
+	visibility = clamp(visibility, 0.0, 1.0);
+	
+	
+}

@@ -1,0 +1,68 @@
+#version 400 core
+
+in vec2 pass_textureCoords;
+in vec3 SurfaceNormal;
+in vec3 ToLightVector[1];
+in vec3 ToCameraVector;//For Specular Lighting
+in float visibility; //For Fog
+
+//layout(location = 0) out vec4 out_Color; 
+
+out vec4 out_Color; 
+
+//For the Blend Map
+uniform sampler2D BlendMap;//Blend Map
+uniform sampler2D RedTexture;//Mud road
+uniform sampler2D SnowTexture;//Snow
+
+uniform sampler2D textureSampler;
+uniform vec3 LightColor[1];//For Per-pixel lighting
+uniform float ShineDamper;//For Specular Lighting
+uniform float reflectivity;//For Specular Lighting
+uniform vec3 sky;//Gives the sky color
+
+
+void main(void)
+{
+	vec4 BlendMapColor = texture(BlendMap, pass_textureCoords); //Sampling texture here
+	
+	vec3 UnitNormal = normalize(SurfaceNormal);
+	vec3 UnitVectorToCamera = normalize(ToCameraVector);
+	vec3 TotalDiffuse = vec3(0.0);
+	vec3 TotalSpecularValue = vec3(0.0);
+	
+	float Snow_Amount = 1 - (BlendMapColor.r + BlendMapColor.g + BlendMapColor.b); //Tile Snow when BlendMap is Black
+	vec2 Tiled_Coords = pass_textureCoords * 40.0; //Amount to be tiled
+	
+	//Calculating the respective colors in our blend map
+	vec4 SnowTextureColor = texture(SnowTexture, Tiled_Coords) * Snow_Amount; //Multiplying for the number of times to be tiled
+	vec4 MudTextureColor = texture(RedTexture, Tiled_Coords) * BlendMapColor.r; //Mud is the Red Texture
+	vec4 TotalColor = SnowTextureColor + MudTextureColor;
+	
+	
+	
+
+	for(int i = 0; i < 1; i++)
+	{
+		vec3 UnitLightVector = normalize(ToLightVector[i]);//The value is same
+		float DotProduct = dot(UnitNormal, UnitLightVector);
+		float Brightness = max(DotProduct,0.0); //Needed till here for per-pixel lighting
+		vec3 LightDirection = -UnitLightVector; //For Specular Lighting
+		vec3 RefLightDirection = reflect(LightDirection,UnitNormal); //For Specular Lighting
+		float SpecularFactor = dot(RefLightDirection, UnitVectorToCamera);//Determines how bright the light should be For Specular Lighting
+		SpecularFactor = max(SpecularFactor, 0.0); //For Specular Lighting
+		float DampedFactor = pow(SpecularFactor,ShineDamper); //For Specular Lighting
+		TotalDiffuse = TotalDiffuse + Brightness * LightColor[i];//This is Diffuse
+		TotalSpecularValue = TotalSpecularValue + DampedFactor * reflectivity * LightColor[i]; //For Specular Lighting
+	}
+	
+
+	TotalDiffuse = max(TotalDiffuse, 0.3);
+	vec4 texture_color = texture(textureSampler, pass_textureCoords);
+
+	out_Color = vec4(TotalDiffuse,1.0)  *  texture_color + vec4(TotalSpecularValue,1.0); //For Specular Lighting
+	out_Color = mix(vec4(sky,1.0), out_Color, visibility);//Mix of all colors for fog
+	
+}
+
+

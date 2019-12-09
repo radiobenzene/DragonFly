@@ -15,9 +15,12 @@ import renderEngine.Loader;
 
 public class OBJFileLoader {
 
+	//All versions and panels of the cube map are saved in the RES folder
 	private static final String RES_LOC = "res/";
 
-	public static RawModel loadOBJ(String objFileName, Loader loader) {
+	public static RawModel loadOBJ(String objFileName, Loader loader) 
+	{
+		//Simple Parser for loading Objects
 		FileReader isr = null;
 		File objFile = new File(RES_LOC + objFileName + ".obj");
 		try {
@@ -35,7 +38,8 @@ public class OBJFileLoader {
 		try {
 			while (true) {
 				line = reader.readLine();
-				if (line.startsWith("v ")) {
+				if (line.startsWith("v ")) 
+				{
 					String[] currentLine = line.split(" ");
 					Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]),
 							(float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
@@ -90,11 +94,13 @@ public class OBJFileLoader {
 			currentVertex.setNormalIndex(normalIndex);
 			indices.add(index);
 		} else {
-			dealWithAlreadyProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
+			ProcessedVertex(currentVertex, textureIndex, normalIndex, indices, vertices);
 		}
 	}
 
-	private static int[] convertIndicesListToArray(List<Integer> indices) {
+	private static int[] convertIndicesListToArray(List<Integer> indices) 
+	{
+		//Converting Index to Array
 		int[] indicesArray = new int[indices.size()];
 		for (int i = 0; i < indicesArray.length; i++) {
 			indicesArray[i] = indices.get(i);
@@ -102,8 +108,9 @@ public class OBJFileLoader {
 		return indicesArray;
 	}
 
-	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals,
-			float[] verticesArray, float[] texturesArray, float[] normalsArray) {
+	private static float convertDataToArrays(List<Vertex> vertices, List<Vector2f> textures, List<Vector3f> normals,float[] verticesArray, float[] texturesArray, float[] normalsArray) 
+	{
+		//Converting data to array
 		float furthestPoint = 0;
 		for (int i = 0; i < vertices.size(); i++) {
 			Vertex currentVertex = vertices.get(i);
@@ -125,15 +132,19 @@ public class OBJFileLoader {
 		return furthestPoint;
 	}
 
-	private static void dealWithAlreadyProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex,
-			List<Integer> indices, List<Vertex> vertices) {
-		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex)) {
+	private static void ProcessedVertex(Vertex previousVertex, int newTextureIndex, int newNormalIndex,List<Integer> indices, List<Vertex> vertices)
+	{
+		if (previousVertex.hasSameTextureAndNormal(newTextureIndex, newNormalIndex))
+		{
 			indices.add(previousVertex.getIndex());
-		} else {
+		} 
+		else {
 			Vertex anotherVertex = previousVertex.getDuplicateVertex();
-			if (anotherVertex != null) {
+			if (anotherVertex != null) 
+			{
 				dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex, indices, vertices);
-			} else {
+			} else
+			{
 				Vertex duplicateVertex = new Vertex(vertices.size(), previousVertex.getPosition());
 				duplicateVertex.setTextureIndex(newTextureIndex);
 				duplicateVertex.setNormalIndex(newNormalIndex);

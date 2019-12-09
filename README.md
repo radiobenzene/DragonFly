@@ -8,14 +8,16 @@ CMC MSU | ВМК МГУ
 The Project was written in OpenGL using the LWJGL for Java.
 
 To Get the working program on Windows, please follow the steps:
-  The Project is in 2 parts:
+  The Project is in 3 parts:
     Download_Project
     Download_MainGame
+    Download_Reflection
     
   The source code of the MainGame is in Project_PartA
   The source code of the refraction project is in Refraction
+  The source code of the reflection project is in Reflection
   
-  The folder Download_Project and Download_MainGame must be downloaded with the exe file and all resources includeing the cube maps(res   and cube folders).
+  The folder Download_Project, Download_Reflection and Download_MainGame must be downloaded with the exe file and all resources includeing the cube maps(res   and cube folders).
   
 Список Эффектов
 

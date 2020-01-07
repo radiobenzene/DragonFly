@@ -45,6 +45,7 @@ public class MainGamePartB {
 		 
 		
 				 /***********************DRAGON INITIALIZATION****************************************************/
+					//The dragon is not loaded to the mian game scene
 					 Loader Dragon_loader = new Loader();
 					 RawModel Dragon_Model = OBJ_Loader.LoadOBJModel("dragon", Dragon_loader);
 					 TexturedModel Dragon_textured_model = new TexturedModel(Dragon_Model, new ModelTexture(Dragon_loader.LoadTexture("mud")));

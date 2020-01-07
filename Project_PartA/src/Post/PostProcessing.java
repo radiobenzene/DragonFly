@@ -10,7 +10,7 @@ import renderEngine.Loader;
  
 public class PostProcessing {
      
-    private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 };    
+    private static final float[] POSITIONS = { -1, 1, -1, -1, 1, 1, 1, -1 }; //Positions for the post-processing effect 
     private static RawModel quad;
     private static ContrastChanger contrast_changer; //For changing the contrast as a post processing effects
     
@@ -24,6 +24,7 @@ public class PostProcessing {
      
     public static void doPostProcessing(int colorTexture)
     {
+     //B key down does not work here
     	//if(Keyboard.isKeyDown(Keyboard.KEY_B))
     	{
     		//If B key is down then do Post Processing
@@ -37,6 +38,7 @@ public class PostProcessing {
      
     public static void cleanUp()
     {
+     //Cleaning All here
     	contrast_changer.CleanAll();
     }
      

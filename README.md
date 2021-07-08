@@ -2,8 +2,8 @@
 Term Project written in LWJGL(OpenGL) for the computer graphics course 2019-2020.
 
 Author - Uditangshu Aurangabadkar | Удитангшу Аурангабадкар  
-Group 341/1 | Группа 341/1 ФИИТ 
-Faculty of Computational Mathematics and Cybernetics, Moscow State University | ВМК МГУ
+Group 341/1 | Группа 341/1 ФИИТ  
+Faculty of Computational Mathematics and Cybernetics, Moscow State University | ВМК МГУ  
 
 The Project was written in OpenGL using the LWJGL for Java.
 

@@ -7,8 +7,8 @@ Faculty of Computational Mathematics and Cybernetics, Moscow State University | 
 
 The Project was written in OpenGL using the LWJGL for Java.
 
-To Get the working program on Windows, please follow the steps:
-  The Project is in 3 parts:
+To get the working program on Windows, please follow the steps:
+  The project is in 3 parts:
   ```
     Download_Project
     Download_MainGame

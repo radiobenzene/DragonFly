@@ -1,4 +1,4 @@
-# ComputerGraphics
+# DragonFly
 Term Project written in LWJGL(OpenGL) for the computer graphics course 2019-2020.
 
 Author - Uditangshu Aurangabadkar | Удитангшу Аурангабадкар  
